@@ -1,7 +1,7 @@
 null-proj-0
 ===========
 
-c++ opengl 3D game/engine/testing stuff  (or more likely just me screwing around a ton)
+c++ opengl 3D game/engine/testing stuff
 
 uses opengl, glew, glm, SDL 2, and lodepng
 
