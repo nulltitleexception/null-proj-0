@@ -1,9 +1,9 @@
-#ifndef MORPHEUSKEYS_H
-#define MORPHEUSKEYS_H
+#ifndef NTEKEYS_H
+#define NTEKEYS_H
 
 #include <chrono>
 
-namespace morpheus {
+namespace nte {
 	enum class Keys : int {
 		Up = 0,
 		Left = 1,
@@ -23,4 +23,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSKEYS_H
+#endif // NTEKEYS_H

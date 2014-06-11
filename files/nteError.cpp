@@ -1,9 +1,9 @@
-#include "MorpheusError.h"
+#include "nteError.h"
 #include <GL/glew.h>
 #include <vector>
 #include <iostream>
 
-namespace morpheus {
+namespace nte {
 	void handleError(Error e, bool gle){
 		if (gle){
 			GLenum ErrorCheckValue = glGetError();

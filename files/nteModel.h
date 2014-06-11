@@ -1,9 +1,9 @@
-#ifndef MORPHEUSMODEL_H
-#define MORPHEUSMODEL_H
+#ifndef NTEMODEL_H
+#define NTEMODEL_H
 
 #include <GL/glew.h>
 
-namespace morpheus {
+namespace nte {
 	class Model {
 	private:
 		GLuint VAO, VBO, IBO;//vertex array, vertex buffer, normal buffer, texture buffer, and index buffer objects
@@ -15,4 +15,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSMODEL
+#endif // NTEMODEL

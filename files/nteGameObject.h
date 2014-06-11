@@ -1,12 +1,12 @@
-#ifndef MORPHEUSGAMEOBJECT_H
-#define MORPHEUSGAMEOBJECT_H
+#ifndef NTEGAMEOBJECT_H
+#define NTEGAMEOBJECT_H
 
-#include "MorpheusModel.h"
-#include "MorpheusTexture.h"
-#include "MorpheusTransform.h"
-#include "MorpheusShader.h"
+#include "nteModel.h"
+#include "nteTexture.h"
+#include "nteTransform.h"
+#include "nteShader.h"
 
-namespace morpheus {
+namespace nte {
 	class GameObject {
 	private:
 		bool hasModel;
@@ -35,4 +35,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSGAMEOBJECT_H
+#endif // NTEGAMEOBJECT_H

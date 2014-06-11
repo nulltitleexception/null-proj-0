@@ -1,8 +1,8 @@
-#include "MorpheusCamera.h"
+#include "nteCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-namespace morpheus {
+namespace nte {
 	void Camera::createOrthographicProjectionMatrix(float width, float height){
 		projection = glm::ortho(0.0f,width,0.0f,height);
 	}

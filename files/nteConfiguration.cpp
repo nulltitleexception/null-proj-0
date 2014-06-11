@@ -1,6 +1,6 @@
-#include "MorpheusConfiguration.h"
+#include "nteConfiguration.h"
 
-namespace morpheus {
+namespace nte {
 	void Configuration::create(int w, int h){
 		width = w;
 		height = h;

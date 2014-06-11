@@ -1,7 +1,7 @@
-#include "MorpheusNoise.h"
+#include "nteNoise.h"
 #include <iostream>
 
-namespace morpheus {
+namespace nte {
 	namespace noise{
 		int ceil(double n){
 			return (int)(n+1);

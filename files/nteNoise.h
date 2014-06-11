@@ -1,7 +1,7 @@
-#ifndef MORPHEUSNOISE_H
-#define MORPHEUSNOISE_H
+#ifndef NTENOISE_H
+#define NTENOISE_H
 
-namespace morpheus {
+namespace nte {
 	namespace noise{
 		double smoothCubicNoise(double x, double y, double z, int seed);
 		double cubicNoise(double x, double y, double z, int seed);
@@ -11,4 +11,4 @@ namespace morpheus {
 	}
 }
 
-#endif // MORPHEUSNOISE_H
+#endif // NTENOISE_H

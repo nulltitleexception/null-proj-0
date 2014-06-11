@@ -1,9 +1,9 @@
-#ifndef MORPHEUSTRANSFORM_H
-#define MORPHEUSTRANSFORM_H
+#ifndef NTETRANSFORM_H
+#define NTETRANSFORM_H
 
 #include <glm/glm.hpp>
 
-namespace morpheus {
+namespace nte {
 	class Transform {
 	public:
 		Transform();
@@ -14,4 +14,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSTRANSFORM_H
+#endif // NTETRANSFORM_H

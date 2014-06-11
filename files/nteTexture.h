@@ -1,9 +1,9 @@
-#ifndef MORPHEUSTEXTURE_H
-#define MORPHEUSTEXTURE_H
+#ifndef NTETEXTURE_H
+#define NTETEXTURE_H
 
 #include <GL/glew.h>
 
-namespace morpheus {
+namespace nte {
 	class Texture {
 	private:
 		GLuint id;
@@ -15,4 +15,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSTEXTURE_H
+#endif // NTETEXTURE_H

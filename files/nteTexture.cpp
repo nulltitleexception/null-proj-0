@@ -1,6 +1,6 @@
-#include "MorpheusTexture.h"
+#include "nteTexture.h"
 
-namespace morpheus {
+namespace nte {
 	Texture::Texture(unsigned char* data, int w, int h){
 		width = w;
 		height = h;

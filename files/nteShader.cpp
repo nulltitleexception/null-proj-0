@@ -1,10 +1,10 @@
-#include "MorpheusShader.h"
-#include "MorpheusError.h"
+#include "nteShader.h"
+#include "nteError.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 
-namespace morpheus {
+namespace nte {
 	Shader::Shader(const GLchar* VertexShader, const GLchar* FragmentShader)
 	{
 		VertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -21,7 +21,7 @@ namespace morpheus {
 		glLinkProgram(ProgramId);
 		glUseProgram(ProgramId);
 
-		morpheus::handleError(morpheus::Error::GL_CREATE_SHADER, true);
+		nte::handleError(nte::Error::GL_CREATE_SHADER, true);
 	}
 	Shader::~Shader()
 	{
@@ -35,7 +35,7 @@ namespace morpheus {
 
 		glDeleteProgram(ProgramId);
 
-		morpheus::handleError(morpheus::Error::GL_DESTROY_SHADER, true);
+		nte::handleError(nte::Error::GL_DESTROY_SHADER, true);
 	}
 	void Shader::bind(){
 		glUseProgram(ProgramId);

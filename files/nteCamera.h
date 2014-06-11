@@ -1,10 +1,10 @@
-#ifndef MORPHEUSCAMERA_H
-#define MORPHEUSCAMERA_H
+#ifndef NTECAMERA_H
+#define NTECAMERA_H
 
-#include "MorpheusShader.h"
+#include "nteShader.h"
 #include <glm/glm.hpp>
 
-namespace morpheus {
+namespace nte {
 	class Camera {
 	private:
 		glm::mat4x4 projection;
@@ -19,4 +19,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSCAMERA_H
+#endif // NTECAMERA_H

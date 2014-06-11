@@ -1,11 +1,11 @@
-#ifndef MORPHEUSWINDOW_H
-#define MORPHEUSWINDOW_H
+#ifndef NTEWINDOW_H
+#define NTEWINDOW_H
 
 #include "SDL.h"
 #include <string>
 #include <mutex>
 
-namespace morpheus {
+namespace nte {
 	class Window {
 	public:
 		bool exists = false;
@@ -22,4 +22,4 @@ namespace morpheus {
 		bool destroy();
 	};
 }
-#endif // MORPHEUSWINDOW_H
+#endif // NTEWINDOW_H

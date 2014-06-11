@@ -1,6 +1,6 @@
-#include "MorpheusTime.h"
+#include "nteTime.h"
 
-namespace morpheus {
+namespace nte {
 	void Timer::start(){
 		startTime = std::chrono::steady_clock::now();
 	}

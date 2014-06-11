@@ -1,14 +1,14 @@
-#ifndef MORPHEUSRESOURCEMANAGER_H
-#define MORPHEUSRESOURCEMANAGER_H
+#ifndef NTERESOURCEMANAGER_H
+#define NTERESOURCEMANAGER_H
 
-#include "MorpheusModel.h"
-#include "MorpheusShader.h"
-#include "MorpheusTexture.h"
+#include "nteModel.h"
+#include "nteShader.h"
+#include "nteTexture.h"
 #include <unordered_map>
 #include <string>
 #include <vector>
 
-namespace morpheus {
+namespace nte {
 	class ResourceManager {
 	private:
 		std::vector<std::string> shaderNames;
@@ -23,9 +23,9 @@ namespace morpheus {
 		std::string textureSuffix;
 		std::string vertSuffix;
 		std::string fragSuffix;
-		std::unordered_map<std::string, morpheus::Model*> models;
-		std::unordered_map<std::string, morpheus::Shader*> shaders;
-		std::unordered_map<std::string, morpheus::Texture*> textures;
+		std::unordered_map<std::string, nte::Model*> models;
+		std::unordered_map<std::string, nte::Shader*> shaders;
+		std::unordered_map<std::string, nte::Texture*> textures;
 		int toInt(std::string s);
 		unsigned int toUInt(std::string s);
 		float toFloat(std::string s);
@@ -53,4 +53,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSRESOURCEMANAGER_H
+#endif // NTERESOURCEMANAGER_H

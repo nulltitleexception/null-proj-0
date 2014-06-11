@@ -1,9 +1,9 @@
-#ifndef MORPHEUSTIME_H
-#define MORPHEUSTIME_H
+#ifndef NTETIME_H
+#define NTETIME_H
 
 #include <chrono>
 
-namespace morpheus {
+namespace nte {
 	class Timer {
 	private:
 		std::chrono::steady_clock::time_point startTime;
@@ -13,4 +13,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSTIME_H
+#endif // NTETIME_H

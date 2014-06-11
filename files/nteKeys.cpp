@@ -1,6 +1,6 @@
-#include "MorpheusKeys.h"
+#include "nteKeys.h"
 
-namespace morpheus {
+namespace nte {
 		void KeyHandler::resetToDefault(){
 			keys[static_cast<int>(Keys::Up)] = 'w';
 			keys[static_cast<int>(Keys::Left)] = 'a';

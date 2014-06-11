@@ -1,7 +1,7 @@
-#ifndef MORPHEUSERROR_H
-#define MORPHEUSERROR_H
+#ifndef NTEERROR_H
+#define NTEERROR_H
 
-namespace morpheus {
+namespace nte {
 	enum class Error : int {
 		NO_ERROR = 0,
 		UNCAUGHT = 1,
@@ -32,4 +32,4 @@ namespace morpheus {
 	void handleError(Error, bool);
 }
 
-#endif // MORPHEUSERROR_H
+#endif // NTEERROR_H

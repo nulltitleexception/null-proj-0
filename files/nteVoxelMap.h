@@ -1,9 +1,9 @@
-#ifndef MORPHEUSVOXELMAP_H
-#define MORPHEUSVOXELMAP_H
+#ifndef NTEVOXELMAP_H
+#define NTEVOXELMAP_H
 
 #include <GL/glew.h>
 
-namespace morpheus {
+namespace nte {
 	struct Voxel {
 		int ID;
 	};
@@ -29,4 +29,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSVOXELMAP_H
+#endif // NTEVOXELMAP_H

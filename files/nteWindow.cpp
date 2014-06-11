@@ -1,10 +1,10 @@
-#include "MorpheusWindow.h"
-#include "MorpheusError.h"
+#include "nteWindow.h"
+#include "nteError.h"
 #include <GL/glew.h>
 #include <iostream>
 #include <string>
 
-namespace morpheus {
+namespace nte {
 	int indexOf(std::string str1, std::string f){
 		std::string::size_type loc = str1.find(f, 0);
 		if (loc != std::string::npos) {
@@ -27,14 +27,14 @@ namespace morpheus {
 		}
 		context = SDL_GL_CreateContext(window);
 		SDL_GL_MakeCurrent(window, context);
-		morpheus::handleError(morpheus::Error::CREATE_WINDOW, true);
+		nte::handleError(nte::Error::CREATE_WINDOW, true);
 		glewExperimental = GL_TRUE;
 		GLenum err = glewInit();
 		if (err != GLEW_OK)
 		{
-			morpheus::handleError(morpheus::Error::GL_GLEW_INIT, false);
+			nte::handleError(nte::Error::GL_GLEW_INIT, false);
 		}
-		morpheus::handleError(morpheus::Error::GL_GLEW_INIT, true);
+		nte::handleError(nte::Error::GL_GLEW_INIT, true);
 		title = title + " OpenGL V" + (char*)glGetString(GL_VERSION);
 		SDL_SetWindowTitle(window, &title[0]);
 		surface = SDL_GetWindowSurface(window);

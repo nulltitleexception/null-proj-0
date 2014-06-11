@@ -1,13 +1,13 @@
 #define _CRT_SECURE_NO_DEPRECATE
-#include "MorpheusResourceManager.h"
-#include "MorpheusError.h"
+#include "nteResourceManager.h"
+#include "nteError.h"
 #include "lodepng.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 
-namespace morpheus {
+namespace nte {
 	ResourceManager::ResourceManager(std::string mfName){
 		loadManifests(mfName);
 	}

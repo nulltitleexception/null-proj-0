@@ -1,14 +1,14 @@
-#include "MorpheusError.h"
-#include "MorpheusWindow.h"
-#include "MorpheusCamera.h"
-#include "MorpheusGameObject.h"
-#include "MorpheusTransform.h"
-#include "MorpheusKeys.h"
-#include "MorpheusTime.h"
-#include "MorpheusShader.h"
-#include "MorpheusResourceManager.h"
-#include "MorpheusModel.h"
-#include "MorpheusNoise.h"
+#include "nteError.h"
+#include "nteWindow.h"
+#include "nteCamera.h"
+#include "nteGameObject.h"
+#include "nteTransform.h"
+#include "nteKeys.h"
+#include "nteTime.h"
+#include "nteShader.h"
+#include "nteResourceManager.h"
+#include "nteModel.h"
+#include "nteNoise.h"
 #include <GL/glew.h>
 #include <SDL.h>
 #include <glm/glm.hpp>
@@ -21,7 +21,7 @@
 #include <iostream>
 #include <random>
 #include <exception>
-#include <vld.h>
+//#include <vld.h>
 #define main main
 
 int handleQuit(std::thread* thisThread, double elapsedTime) {
@@ -29,7 +29,7 @@ int handleQuit(std::thread* thisThread, double elapsedTime) {
 	return 0;
 }
 
-int handleKeyChange(std::thread* thisThread, morpheus::KeyHandler keys) {
+int handleKeyChange(std::thread* thisThread, nte::KeyHandler keys) {
 	char yn = 0;
 	while (yn != 'y' && yn != 'n') {
 		if (yn != 0){
@@ -50,7 +50,7 @@ int handleKeyChange(std::thread* thisThread, morpheus::KeyHandler keys) {
 
 int main(int argc, char** argv) {
 	try {
-		morpheus::Timer programTime;
+		nte::Timer programTime;
 		programTime.start();
 
 		/*std::mt19937_64 rng;
@@ -60,8 +60,8 @@ int main(int argc, char** argv) {
 			std::cout << rng() << std::endl;
 		}*/
 
-		morpheus::Window window;
-		morpheus::KeyHandler keys;
+		nte::Window window;
+		nte::KeyHandler keys;
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		{
@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
 
 		keys.resetToDefault();
 
-		std::string title = "Morpheus V0.0.0";
+		std::string title = "nte V0.0.0";
 		window.create(title, 800, 600);
 
-		morpheus::ResourceManager* resources = new morpheus::ResourceManager("manifest.mf");
+		nte::ResourceManager* resources = new nte::ResourceManager("manifest.mf");
 
 		//removeme
 		//resources->convertObjModel("monkey_smooth");
@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 		int seed = 123;
 		for (int a = 0; a < 500; a++){
 			for (int b = 0; b < 500; b++){
-				unsigned char lval = (unsigned char)((morpheus::noise::cubicNoise(a/30.0, b/30.0, 0, seed) + 1) * 127);
+				unsigned char lval = (unsigned char)((nte::noise::cubicNoise(a/30.0, b/30.0, 0, seed) + 1) * 127);
 				lval /= 100;
 				lval %= 2;
 				lval *= 255;
@@ -98,14 +98,14 @@ int main(int argc, char** argv) {
 			}
 		}
 
-		morpheus::GameObject* go;
-		go = new morpheus::GameObject();
+		nte::GameObject* go;
+		go = new nte::GameObject();
 		go->addModelByReference(resources->getModel("cube_smooth"));
-		go->addUniqueTransform(new morpheus::Transform());
+		go->addUniqueTransform(new nte::Transform());
 		//go->addTextureByReference(resources->getTexture("sphere_wrapped"));
-		go->addUniqueTexture(new morpheus::Texture(&noiseData[0], 500, 500));
+		go->addUniqueTexture(new nte::Texture(&noiseData[0], 500, 500));
 
-		morpheus::Camera camera;
+		nte::Camera camera;
 		camera.createPerspectiveProjectionMatrix(800, 600, 0.1f, 1000.0f, glm::radians(90.0f));
 		camera.position.z = 100;
 
@@ -119,14 +119,18 @@ int main(int argc, char** argv) {
 		SDL_Event event;
 		int frameCount = 0;
 		int fps = 0;
-		morpheus::Timer fpsTime;
+		nte::Timer fpsTime;
 
-		morpheus::Timer frameTime;
+		nte::Timer frameTime;
 		double eventTime = 0;
 		double updateTime = 0;
 		double renderTime = 0;
 
+		nte::Timer updateDeltaTimer;
+
+		std::cout << "Entering game loop..." << std::endl;
 		fpsTime.start();
+		updateDeltaTimer.start();
 		while (!shouldExit) {
 			frameTime.start();
 			while (SDL_PollEvent(&event)) {
@@ -162,24 +166,26 @@ int main(int argc, char** argv) {
 					if (event.key.keysym.sym == SDLK_F9){
 						rotateMonkey = !rotateMonkey;
 					}
-					if (event.key.keysym.sym == keys.getKey(morpheus::Keys::Up)){
+					if (event.key.keysym.sym == keys.getKey(nte::Keys::Up)){
 						camera.position.z += 2;
 					}
-					if (event.key.keysym.sym == keys.getKey(morpheus::Keys::Left)){
+					if (event.key.keysym.sym == keys.getKey(nte::Keys::Left)){
 						camera.position.x -= 2;
 					}
-					if (event.key.keysym.sym == keys.getKey(morpheus::Keys::Down)){
+					if (event.key.keysym.sym == keys.getKey(nte::Keys::Down)){
 						camera.position.z -= 2;
 					}
-					if (event.key.keysym.sym == keys.getKey(morpheus::Keys::Right)){
+					if (event.key.keysym.sym == keys.getKey(nte::Keys::Right)){
 						camera.position.x += 2;
 					}
 				}
 			}
 			eventTime = frameTime.getMillis();
 			if (!shouldExit && !paused){
+				double delta = updateDeltaTimer.getMillis();
+				updateDeltaTimer.start();
 				if (rotateMonkey){
-					go->getTransform()->rotation.y++;
+					go->getTransform()->rotation.y += (float)((delta * 90) / 1000.0);
 				}
 			}
 			updateTime = frameTime.getMillis() - eventTime;
@@ -192,7 +198,7 @@ int main(int argc, char** argv) {
 				camera.bind(resources->getShader(shaderToUse));
 				go->draw(resources->getShader(shaderToUse));
 				window.endDraw();
-				morpheus::handleError(morpheus::Error::GL_DRAW, true);
+				nte::handleError(nte::Error::GL_DRAW, true);
 			}
 			renderTime = frameTime.getMillis() - (updateTime + eventTime);
 			frameCount++;
@@ -212,11 +218,11 @@ int main(int argc, char** argv) {
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 	catch (std::exception& e){
-		morpheus::handleError(morpheus::Error::UNCAUGHT, false);
+		nte::handleError(nte::Error::UNCAUGHT, false);
 		std::cout << e.what() << std::endl;
 	}
 	catch (...) {
-		morpheus::handleError(morpheus::Error::UNCAUGHT, false);
+		nte::handleError(nte::Error::UNCAUGHT, false);
 	}
 	int keytoexit = 0;
 	std::cin >> keytoexit;

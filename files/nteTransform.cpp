@@ -1,8 +1,8 @@
-#include "MorpheusTransform.h"
+#include "nteTransform.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-namespace morpheus {
+namespace nte {
 	Transform::Transform(){
 		position = glm::vec3(0, 0, 0);
 		rotation = glm::vec3(0, 0, 0);

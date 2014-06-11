@@ -1,10 +1,10 @@
-#ifndef MORPHEUSSHADER_H
-#define MORPHEUSSHADER_H
+#ifndef NTESHADER_H
+#define NTESHADER_H
 
 #include <string>
 #include <GL/glew.h>
 
-namespace morpheus {
+namespace nte {
 	class Shader {
 	private:
 		GLuint VertexShaderId, FragmentShaderId, ProgramId;
@@ -16,4 +16,4 @@ namespace morpheus {
 	};
 }
 
-#endif // MORPHEUSSHADER_H
+#endif // NTESHADER_H

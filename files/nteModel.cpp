@@ -1,8 +1,8 @@
-#include "MorpheusModel.h"
-#include "MorpheusError.h"
+#include "nteModel.h"
+#include "nteError.h"
 #include <iostream>
 
-namespace morpheus {
+namespace nte {
 	Model::Model(GLfloat* verts, int vertlen, int vertOffset, int normOffset, int UVOffset, int stride, GLuint* indices, int indlen, int size){
 		drawSize = size;
 		glGenVertexArrays(1, &VAO);
@@ -28,7 +28,7 @@ namespace morpheus {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 
-		morpheus::handleError(morpheus::Error::GL_CREATE_VBO, true);
+		nte::handleError(nte::Error::GL_CREATE_VBO, true);
 	}
 	Model::~Model(){
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -40,7 +40,7 @@ namespace morpheus {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glDeleteBuffers(1, &IBO);
 
-		morpheus::handleError(morpheus::Error::GL_DESTROY_VBO, true);
+		nte::handleError(nte::Error::GL_DESTROY_VBO, true);
 	}
 	void Model::draw(){
 		glBindVertexArray(VAO);

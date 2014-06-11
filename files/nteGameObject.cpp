@@ -1,6 +1,6 @@
-#include "MorpheusGameObject.h"
+#include "nteGameObject.h"
 
-namespace morpheus {
+namespace nte {
 	GameObject::GameObject(){
 		hasModel = false;
 		modelOnHeap = false;
@@ -8,6 +8,9 @@ namespace morpheus {
 		hasTransform = false;
 		transformOnHeap = false;
 		transform = nullptr;
+		hasTexture = false;
+		textureOnHeap = false;
+		texture = nullptr;
 	}
 	GameObject::~GameObject(){
 		removeModel();
