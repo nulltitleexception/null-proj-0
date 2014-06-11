@@ -1,0 +1,2 @@
+resourceprefix|res/
+resourcemanifest|resource.mf

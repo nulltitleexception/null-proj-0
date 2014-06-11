@@ -1,0 +1,11 @@
+shaderprefix|shader/
+modelprefix|model/
+textureprefix|texture/
+shadermanifest|shader.mf
+modelmanifest|model.mf
+texturemanifest|texture.mf
+shadersuffix|.glsl
+shadervertexsuffix|_vertex
+shaderfragmentsuffix|_fragment
+modelsuffix|.vnf
+texturesuffix|.png
