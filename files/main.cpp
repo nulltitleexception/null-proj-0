@@ -1,3 +1,5 @@
+//null-proj-0
+//libraries used: opengl, glew, glm, SDL2, lodepng
 #include "nteError.h"
 #include "nteWindow.h"
 #include "nteCamera.h"
@@ -53,6 +55,7 @@ int main(int argc, char** argv) {
 		nte::Timer programTime;
 		programTime.start();
 
+		//this is here as an example prng, in case I forget.  I was pretty surprised to find a mersenne twister implementation in the standard library.
 		/*std::mt19937_64 rng;
 		//rng.seed(std::chrono::duration <double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count());
 		rng.seed(); //not random, whereas above uses time to introduce inital entropy requirement.
@@ -76,6 +79,7 @@ int main(int argc, char** argv) {
 
 		nte::ResourceManager* resources = new nte::ResourceManager("manifest.mf");
 
+		//converts a .obj file into a .vnf file
 		//removeme
 		//resources->convertObjModel("monkey_smooth");
 		//int d = 0;
@@ -88,9 +92,9 @@ int main(int argc, char** argv) {
 		for (int a = 0; a < 500; a++){
 			for (int b = 0; b < 500; b++){
 				unsigned char lval = (unsigned char)((nte::noise::cubicNoise(a/30.0, b/30.0, 0, seed) + 1) * 127);
-				lval /= 100;
-				lval %= 2;
-				lval *= 255;
+				//lval /= 100;
+				//lval %= 2;
+				//lval *= 255;
 				noiseData.push_back(lval);
 				noiseData.push_back(lval);
 				noiseData.push_back(lval);

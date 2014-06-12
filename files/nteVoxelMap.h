@@ -6,6 +6,7 @@
 namespace nte {
 	struct Voxel {
 		int ID;
+		float color;
 	};
 	class VoxelMap {
 	private:
