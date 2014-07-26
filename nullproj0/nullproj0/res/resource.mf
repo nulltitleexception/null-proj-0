@@ -1,3 +1,5 @@
+metaprefix|meta/
+metamanifest|meta.mf
 shaderprefix|shader/
 modelprefix|model/
 textureprefix|texture/

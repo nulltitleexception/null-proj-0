@@ -9,8 +9,7 @@ namespace nte {
 		std::string::size_type loc = str1.find(f, 0);
 		if (loc != std::string::npos) {
 			return loc;
-		}
-		else {
+		} else {
 			return -1;
 		}
 	}
@@ -53,7 +52,11 @@ namespace nte {
 	}
 	void Window::setTitle(std::string title, bool appendOpenGLV, int fps, double et, double ut, double rt, double tt){
 		if (appendOpenGLV){
-			title = title + " OpenGL V" + (char*)glGetString(GL_VERSION);
+			int maj = -1;
+			int min = -1;
+			glGetIntegerv(GL_MAJOR_VERSION, &maj);
+			glGetIntegerv(GL_MINOR_VERSION, &min);
+			title = title + " OpenGL V" + std::to_string(maj) + "." + std::to_string(min);
 		}
 		title = title + " FPS: " + std::to_string(fps) + " at " + std::to_string(tt).substr(0, indexOf(std::to_string(tt), ".") + 2) + "ms/frame" + ", Events " + std::to_string(et).substr(0, indexOf(std::to_string(et), ".") + 2) + "ms, Update " + std::to_string(ut).substr(0, indexOf(std::to_string(ut), ".") + 2) + "ms, Render " + std::to_string(rt).substr(0, indexOf(std::to_string(rt), ".") + 2) + "ms";
 		SDL_SetWindowTitle(window, &title[0]);

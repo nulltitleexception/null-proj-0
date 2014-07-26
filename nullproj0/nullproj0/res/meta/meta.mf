@@ -1,0 +1,3 @@
+readme|README.txt
+version|VERSION.ver
+builddata|BUILD.bcfg

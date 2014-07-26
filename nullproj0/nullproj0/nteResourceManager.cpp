@@ -58,9 +58,94 @@ namespace nte {
 		std::string::size_type loc = str1.find(f, 0);
 		if (loc != std::string::npos) {
 			return loc;
-		}
-		else {
+		} else {
 			return -1;
+		}
+	}
+	void ResourceManager::loadReadme(std::string fileName){
+		std::string line;
+		std::ifstream file(globalPrefix + metaPrefix + fileName);
+		if (file.is_open())
+		{
+			while (getline(file, line))
+			{
+				readme.append(line);
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open manifest file";
+			handleError(Error::LOAD_FILE, true);
+		}
+	}
+	void ResourceManager::loadVersion(std::string versionFileName, std::string buildFileName){
+		std::string prefix;
+		int major = -1;
+		int minor = -1;
+		std::string line;
+		std::ifstream vFile(globalPrefix + metaPrefix + versionFileName);
+		if (vFile.is_open())
+		{
+			while (getline(vFile, line))
+			{
+				if (indexOf(line, "prefix") == 0){
+					prefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "major") == 0){
+					major = toInt(line.substr(indexOf(line, "|") + 1, std::string::npos));
+				} else if (indexOf(line, "minor") == 0){
+					minor = toInt(line.substr(indexOf(line, "|") + 1, std::string::npos));
+				}
+			}
+			vFile.close();
+		} else {
+			std::cout << "Unable to open manifest file";
+			handleError(Error::LOAD_FILE, true);
+		}
+		FILE *rfp = fopen((globalPrefix + metaPrefix + buildFileName).c_str(), "rb");
+		int bMaj;
+		int bMin;
+		int build;
+		fread(&bMaj, sizeof(int), 1, rfp);
+		fread(&bMin, sizeof(int), 1, rfp);
+		fread(&build, sizeof(int), 1, rfp);
+		fclose(rfp);
+		if (bMin != minor || bMaj != major){
+			build = 0;
+		} else{
+			build++;
+		}
+		FILE *wfp = fopen((globalPrefix + metaPrefix + buildFileName).c_str(), "wb");
+		fwrite(&major, sizeof(int), 1, wfp);
+		fwrite(&minor, sizeof(int), 1, wfp);
+		fwrite(&build, sizeof(int), 1, wfp);
+		fclose(wfp);
+		std::stringstream versionStream;
+		versionStream << prefix << "." << major << "." << minor << "." << build;
+		version = versionStream.str();
+	}
+	void ResourceManager::loadMetaManifest(std::string fileName){
+		std::string versionFile;
+		std::string readmeFile;
+		std::string buildFile;
+		std::string line;
+		std::ifstream file(globalPrefix + metaPrefix + fileName);
+		if (file.is_open())
+		{
+			while (getline(file, line))
+			{
+				if (indexOf(line, "version") == 0){
+					versionFile = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "readme") == 0){
+					readmeFile = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "build") == 0){
+					buildFile = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				}
+			}
+			file.close();
+			loadReadme(readmeFile);
+			loadVersion(versionFile, buildFile);
+		} else {
+			std::cout << "Unable to open manifest file";
+			handleError(Error::LOAD_FILE, true);
 		}
 	}
 	void ResourceManager::loadShaderManifest(std::string fileName){
@@ -75,8 +160,7 @@ namespace nte {
 				}
 			}
 			file.close();
-		}
-		else {
+		} else {
 			std::cout << "Unable to open manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -93,8 +177,7 @@ namespace nte {
 				}
 			}
 			file.close();
-		}
-		else {
+		} else {
 			std::cout << "Unable to open manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -111,13 +194,13 @@ namespace nte {
 				}
 			}
 			file.close();
-		}
-		else {
+		} else {
 			std::cout << "Unable to open manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
 	void ResourceManager::loadResourceManifest(std::string fileName){
+		std::string metamf;
 		std::string shadermf;
 		std::string modelmf;
 		std::string texturemf;
@@ -127,46 +210,40 @@ namespace nte {
 		{
 			while (getline(file, line))
 			{
-				if (indexOf(line, "shaderprefix") == 0){
+				if (indexOf(line, "metaprefix") == 0){
+					metaPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "shaderprefix") == 0){
 					shaderPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "modelprefix") == 0){
+				} else if (indexOf(line, "modelprefix") == 0){
 					modelPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "textureprefix") == 0){
+				} else if (indexOf(line, "textureprefix") == 0){
 					texturePrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "shadermanifest") == 0){
+				} else if (indexOf(line, "metamanifest") == 0){
+					metamf = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "shadermanifest") == 0){
 					shadermf = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "modelmanifest") == 0){
+				} else if (indexOf(line, "modelmanifest") == 0){
 					modelmf = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "texturemanifest") == 0){
+				} else if (indexOf(line, "texturemanifest") == 0){
 					texturemf = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "shadersuffix") == 0){
+				} else if (indexOf(line, "shadersuffix") == 0){
 					shaderSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "modelsuffix") == 0){
+				} else if (indexOf(line, "modelsuffix") == 0){
 					modelSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "texturesuffix") == 0){
+				} else if (indexOf(line, "texturesuffix") == 0){
 					textureSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "shadervertexsuffix") == 0){
+				} else if (indexOf(line, "shadervertexsuffix") == 0){
 					vertSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "shaderfragmentsuffix") == 0){
+				} else if (indexOf(line, "shaderfragmentsuffix") == 0){
 					fragSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				}
 			}
 			file.close();
+			loadMetaManifest(metamf);
 			loadShaderManifest(shadermf);
 			loadModelManifest(modelmf);
 			loadTextureManifest(texturemf);
-		}
-		else {
+		} else {
 			std::cout << "Unable to open manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -181,18 +258,19 @@ namespace nte {
 			{
 				if (indexOf(line, "resourceprefix") == 0){
 					globalPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
-				}
-				else if (indexOf(line, "resourcemanifest") == 0){
+				} else if (indexOf(line, "resourcemanifest") == 0){
 					resourcemf = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				}
 			}
 			file.close();
-		}
-		else {
+		} else {
 			std::cout << "Unable to open resource manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 		loadResourceManifest(resourcemf);
+	}
+	std::string ResourceManager::getVersion(){
+		return version;
 	}
 	Model* ResourceManager::getModel(std::string fileName){
 		return models[fileName];
@@ -246,8 +324,7 @@ namespace nte {
 						rawnormals.push_back(toFloat(line.substr(0, indexOf(line, " "))));
 					}
 					rawnormals.push_back(0);
-				}
-				else if (line.substr(0, 2) == "vt"){
+				} else if (line.substr(0, 2) == "vt"){
 					if (stage != 1){
 						std::cout << rawverts.size() / 4 << " vertices loaded." << std::endl;
 						std::cout << "\tLoading UV coords...\t";
@@ -257,8 +334,7 @@ namespace nte {
 						line = line.substr(indexOf(line, " ") + 1, std::string::npos);
 						rawUVs.push_back(toFloat(line.substr(0, indexOf(line, " "))));
 					}
-				}
-				else if (line.substr(0, 1) == "v"){
+				} else if (line.substr(0, 1) == "v"){
 					if (stage != 0){
 						std::cout << "\tLoading vertices...\t";
 					}
@@ -268,8 +344,7 @@ namespace nte {
 						rawverts.push_back(toFloat(line.substr(0, indexOf(line, " "))));
 					}
 					rawverts.push_back(1);
-				}
-				else if (line.substr(0, 1) == "f"){
+				} else if (line.substr(0, 1) == "f"){
 					if (stage != 3){
 						std::cout << rawnormals.size() / 4 << " normals loaded." << std::endl;
 						std::cout << "\tLoading polygons...\t";
@@ -293,7 +368,7 @@ namespace nte {
 			std::vector<unsigned int> faces;
 			std::vector<float> vertexData;
 			for (int i = 0; i < rawfaces.size(); i += 3){
-				faces.push_back(addVert(rawVertexData, rawfaces.at(i), rawfaces.at(i+1), rawfaces.at(i+2)));
+				faces.push_back(addVert(rawVertexData, rawfaces.at(i), rawfaces.at(i + 1), rawfaces.at(i + 2)));
 			}
 			for (int i = 0; i < rawVertexData.size(); i += 3){
 				vertexData.push_back(rawverts.at((rawVertexData.at(i) * 4)));
@@ -322,8 +397,7 @@ namespace nte {
 			fwrite(&faces[0], sizeof(unsigned int), faces.size(), fp);
 
 			fclose(fp);
-		}
-		else {
+		} else {
 			std::cout << "Unable to open model file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -343,8 +417,7 @@ namespace nte {
 			}
 			vertFile.close();
 			std::cout << "Done." << std::endl;
-		}
-		else {
+		} else {
 			std::cout << "Unable to open vert file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -360,8 +433,7 @@ namespace nte {
 			}
 			fragFile.close();
 			std::cout << "Done." << std::endl;
-		}
-		else {
+		} else {
 			std::cout << "Unable to open frag file";
 			handleError(Error::LOAD_FILE, true);
 		}
@@ -400,16 +472,16 @@ namespace nte {
 		std::cout << "Loading texture file: " << fileName << " (" << (globalPrefix + texturePrefix + fileName + textureSuffix) << ")..." << std::endl;
 		std::cout << "\tLoading pixels...\t";
 		std::string fullFileName = (globalPrefix + texturePrefix + fileName + textureSuffix);
-			std::vector<unsigned char> image;
-			unsigned int width, height;
-			unsigned int error = lodepng::decode(image, width, height, &fullFileName[0]);
-			if (error)
-			{
-				std::cout << "error: " << error << ": " << lodepng_error_text(error) << std::endl;
-			}
-			std::cout << (width * height) << " pixels loaded." << std::endl;
-			textures[fileName] = new Texture(&image[0], width, height);
-			textureNames.push_back(fileName);
-			std::cout << "Done." << std::endl;
+		std::vector<unsigned char> image;
+		unsigned int width, height;
+		unsigned int error = lodepng::decode(image, width, height, &fullFileName[0]);
+		if (error)
+		{
+			std::cout << "error: " << error << ": " << lodepng_error_text(error) << std::endl;
+		}
+		std::cout << (width * height) << " pixels loaded." << std::endl;
+		textures[fileName] = new Texture(&image[0], width, height);
+		textureNames.push_back(fileName);
+		std::cout << "Done." << std::endl;
 	}
 }

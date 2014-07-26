@@ -59,8 +59,8 @@ int main(int argc, char** argv) {
 		/*std::mt19937_64 rng;
 		//rng.seed(std::chrono::duration <double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count());
 		rng.seed(); //not random, whereas above uses time to introduce inital entropy requirement.
-		for (int i = 0; i < 10; ++i){ 
-			std::cout << rng() << std::endl;
+		for (int i = 0; i < 10; ++i){
+		std::cout << rng() << std::endl;
 		}*/
 
 		nte::Window window;
@@ -74,10 +74,12 @@ int main(int argc, char** argv) {
 
 		keys.resetToDefault();
 
-		std::string title = "nte V0.0.0";
+		std::string title = "nte";
 		window.create(title, 800, 600);
 
 		nte::ResourceManager* resources = new nte::ResourceManager("manifest.mf");
+		title += " " + resources->getVersion();
+
 
 		//converts a .obj file into a .vnf file
 		//removeme
@@ -91,7 +93,7 @@ int main(int argc, char** argv) {
 		int seed = 123;
 		for (int a = 0; a < 500; a++){
 			for (int b = 0; b < 500; b++){
-				unsigned char lval = (unsigned char)((nte::noise::cubicNoise(a/30.0, b/30.0, 0, seed) + 1) * 127);
+				unsigned char lval = (unsigned char)((nte::noise::cubicNoise(a / 30.0, b / 30.0, 0, seed) + 1) * 127);
 				//lval /= 100;
 				//lval %= 2;
 				//lval *= 255;
@@ -104,7 +106,7 @@ int main(int argc, char** argv) {
 
 		nte::GameObject* go;
 		go = new nte::GameObject();
-		go->addModelByReference(resources->getModel("cube_smooth"));
+		go->addModelByReference(resources->getModel("cube_sharp"));
 		go->addUniqueTransform(new nte::Transform());
 		//go->addTextureByReference(resources->getTexture("sphere_wrapped"));
 		go->addUniqueTexture(new nte::Texture(&noiseData[0], 500, 500));
@@ -159,8 +161,7 @@ int main(int argc, char** argv) {
 						isWireFrame = !isWireFrame;
 						if (isWireFrame){
 							glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-						}
-						else {
+						} else {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 						}
 					}
@@ -220,12 +221,10 @@ int main(int argc, char** argv) {
 		std::thread quitHandler = std::thread(handleQuit, &quitHandler, programTime.getMillis());
 		quitHandler.join();
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
-	catch (std::exception& e){
+	} catch (std::exception& e){
 		nte::handleError(nte::Error::UNCAUGHT, false);
 		std::cout << e.what() << std::endl;
-	}
-	catch (...) {
+	} catch (...) {
 		nte::handleError(nte::Error::UNCAUGHT, false);
 	}
 	int keytoexit = 0;
