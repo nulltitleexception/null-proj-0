@@ -13,7 +13,8 @@ namespace nte {
 		Right = 3,
 		Jump = 4,
 		RollLeft = 5,
-		RollRight = 6
+		RollRight = 6,
+		Sprint = 7
 	};
 	class KeyHandler {
 	private:
@@ -28,7 +29,7 @@ namespace nte {
 		void setKey(Keys, int);
 		int getKey(Keys);
 		void swapKeys(int, int);
-		void handleKeyPress(int);
+		void handleKeyPress(int, bool);
 		bool isKeyDown(Keys);
 		bool wasKeyPressed(Keys);
 		void update();

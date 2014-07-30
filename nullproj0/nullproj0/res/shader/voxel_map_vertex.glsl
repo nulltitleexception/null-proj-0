@@ -13,8 +13,10 @@ uniform mat4 projectionMatrix;
 void main(void)
 {
    gl_Position = projectionMatrix * viewMatrix * modelMatrix * in_Position;
-   pass_Color.x = ((in_Position.y * 0.9) + 0.5);
-   pass_Color.y = ((in_Position.y * 0.9) + 0.5);
-   pass_Color.z = ((in_Position.y * 0.9) + 0.5);
+   float l = (in_Position.y / 7.5) + 0.5;
+   //float l = dot(in_Normal.xyz, normalize(vec3(0, 1, 1)));
+   pass_Color.x = l;
+   pass_Color.y = l;
+   pass_Color.z = l;
    pass_Color.w = 1.0;
 }

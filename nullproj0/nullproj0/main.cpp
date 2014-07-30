@@ -66,11 +66,12 @@ int main(int argc, char** argv) {
 			std::cout << "SDL initialization failed. SDL_Error: " << SDL_GetError() << std::endl;
 			return 1;
 		}
+		SDL_SetRelativeMouseMode(SDL_TRUE);
 
 		keys = new nte::KeyHandler();
 
 		std::string title = "nte";
-		window.create(title, 800, 600);
+		window.create(title, 1600, 900);
 
 		nte::ResourceManager* resources = new nte::ResourceManager("manifest.mf");
 		title += " " + resources->getVersion();
@@ -97,7 +98,7 @@ int main(int argc, char** argv) {
 		vox->generateModel();
 
 		nte::Camera camera;
-		camera.createPerspectiveProjectionMatrix(800, 600, 0.1f, 1000.0f, glm::radians(90.0f));
+		camera.createPerspectiveProjectionMatrix(1600, 900, 0.01f, 100000.0f, glm::radians(90.0f));
 		//camera.position.z = 100;
 
 		bool paused = false;
@@ -135,6 +136,10 @@ int main(int argc, char** argv) {
 						break;
 					}
 					break;
+				case SDL_MOUSEMOTION:
+					camera.rotation.x -= event.motion.yrel / 40.0f;
+					camera.rotation.y -= event.motion.xrel / 40.0f;
+					break;
 				case SDL_KEYDOWN:
 					if (event.key.keysym.sym == SDLK_F2){
 						handleKeyChange(keys);
@@ -148,26 +153,69 @@ int main(int argc, char** argv) {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 						}
 					} else{
-						keys->handleKeyPress(event.key.keysym.sym);
+						keys->handleKeyPress(event.key.keysym.sym, true);
 					}
+					break;
+				case SDL_KEYUP:
+					keys->handleKeyPress(event.key.keysym.sym, false);
+					break;
 				}
 			}
 			eventTime = frameTime.getMillis();
 			if (!shouldExit && !paused){
 				double delta = updateDeltaTimer.getMillis();
 				updateDeltaTimer.start();
-				if (keys->wasKeyPressed(nte::Keys::Up)){
-					std::cout << "Up Pressed" << std::endl;
+				double speed = 0.002;
+				int forward = 0;
+				int left = 0;
+				int angle = -1;
+				if (keys->isKeyDown(nte::Keys::Sprint)){
+					speed *= 20;
 				}
-				if (keys->wasKeyPressed(nte::Keys::Down)){
-					std::cout << "Down Pressed" << std::endl;
+				if (keys->isKeyDown(nte::Keys::Jump)){
+					speed *= 100;
 				}
-				if (keys->wasKeyPressed(nte::Keys::Left)){
-					std::cout << "Left Pressed" << std::endl;
+				if (keys->isKeyDown(nte::Keys::RollLeft)){
+					camera.position.y -= speed;
 				}
-				if (keys->wasKeyPressed(nte::Keys::Right)){
-					std::cout << "Right Pressed" << std::endl;
+				if (keys->isKeyDown(nte::Keys::RollRight)){
+					camera.position.y += speed;
 				}
+				if (keys->isKeyDown(nte::Keys::Up)){
+					forward++;
+				}
+				if (keys->isKeyDown(nte::Keys::Down)){
+					forward--;
+				}
+				if (keys->isKeyDown(nte::Keys::Left)){
+					left++;
+				}
+				if (keys->isKeyDown(nte::Keys::Right)){
+					left--;
+				}
+				if (forward == 0 && left == 0){
+				} else if (forward == 1 && left == 0){
+					angle = 0;
+				} else if (forward == 1 && left == -1){
+					angle = 1;
+				} else if (forward == 0 && left == -1){
+					angle = 2;
+				} else if (forward == -1 && left == -1){
+					angle = 3;
+				} else if (forward == -1 && left == 0){
+					angle = 4;
+				} else if (forward == -1 && left == 1){
+					angle = 5;
+				} else if (forward == 0 && left == 1){
+					angle = 6;
+				} else if (forward == 1 && left == 1){
+					angle = 7;
+				}
+				if (angle != -1){
+					camera.position.x += speed * delta * sin((angle * (M_PI / 4)) - glm::radians(camera.rotation.y));
+					camera.position.z -= speed * delta * cos((angle * (M_PI / 4)) - glm::radians(camera.rotation.y));
+				}
+				//camera.position.y = vox->getHeightAt(camera.position.x, camera.position.z) + 0.02;
 				keys->update();
 			}
 			updateTime = frameTime.getMillis() - eventTime;
@@ -184,7 +232,6 @@ int main(int argc, char** argv) {
 				nte::Transform* temp = new nte::Transform();
 				glUniformMatrix4fv(modMatPos, 1, GL_FALSE, &(temp->getAsMatrix()[0][0]));
 				vox->draw();
-				//resources->getModel("cube_sharp")->draw();
 				window.endDraw();
 				nte::handleError(nte::Error::GL_DRAW, true);
 			}

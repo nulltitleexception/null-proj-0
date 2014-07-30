@@ -19,6 +19,6 @@ namespace nte {
 		return projection;
 	}
 	glm::mat4x4 Camera::getView(){
-		return glm::translate(position * -1.0f) * glm::rotate(-rotation.y, glm::vec3(0, 1, 0)) * glm::rotate(-rotation.x, glm::vec3(1, 0, 0)) * glm::rotate(-rotation.z, glm::vec3(0, 0, 1));
+		return glm::rotate(-rotation.z, glm::vec3(0, 0, 1)) * glm::rotate(-rotation.y, glm::vec3(0, 1, 0)) * glm::rotate(-rotation.x, glm::vec3(1, 0, 0)) * glm::translate(position * -1.0f);
 	}
 }

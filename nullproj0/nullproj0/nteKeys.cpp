@@ -1,5 +1,7 @@
 #include "nteKeys.h"
 
+#include <SDL.h>
+
 namespace nte {
 	KeyHandler::KeyHandler(){
 		for (int i = 0; i < KEY_NUMBER; i++){
@@ -22,6 +24,7 @@ namespace nte {
 		keys[getKeysAsInt(Keys::Jump)] = ' ';
 		keys[getKeysAsInt(Keys::RollLeft)] = 'q';
 		keys[getKeysAsInt(Keys::RollRight)] = 'e';
+		keys[getKeysAsInt(Keys::Sprint)] = SDLK_LSHIFT;
 	}
 	void KeyHandler::setKey(Keys k, int sdlKeyCode){
 		keys[getKeysAsInt(k)] = sdlKeyCode;
@@ -47,10 +50,10 @@ namespace nte {
 			keys[k2Slot] = k1;
 		}
 	}
-	void KeyHandler::handleKeyPress(int k){
+	void KeyHandler::handleKeyPress(int k, bool pressed){
 		for (int i = 0; i < KEY_NUMBER; i++){
 			if (keys[i] == k){
-				isDown[i] = true;
+				isDown[i] = pressed;
 			}
 		}
 	}
@@ -63,7 +66,6 @@ namespace nte {
 	void KeyHandler::update(){
 		for (int i = 0; i < KEY_NUMBER; i++){
 			isDownPrev[i] = isDown[i];
-			isDown[i] = false;
 		}
 	}
 }
