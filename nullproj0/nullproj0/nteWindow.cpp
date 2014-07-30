@@ -18,22 +18,27 @@ namespace nte {
 		SCREEN_HEIGHT = h;
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
 		window = SDL_CreateWindow(&title[0], SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
 		if (window == NULL)
 		{
 			std::cout << "Window: \"" << title << "\" creation failed. SDL_Error: " << SDL_GetError() << std::endl;
 			return false;
 		}
+
 		context = SDL_GL_CreateContext(window);
 		SDL_GL_MakeCurrent(window, context);
 		nte::handleError(nte::Error::CREATE_WINDOW, true);
+
 		glewExperimental = GL_TRUE;
 		GLenum err = glewInit();
 		if (err != GLEW_OK)
 		{
 			nte::handleError(nte::Error::GL_GLEW_INIT, false);
 		}
+
 		nte::handleError(nte::Error::GL_GLEW_INIT, true);
+
 		title = title + " OpenGL V" + (char*)glGetString(GL_VERSION);
 		SDL_SetWindowTitle(window, &title[0]);
 		surface = SDL_GetWindowSurface(window);

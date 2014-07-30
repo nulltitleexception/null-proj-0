@@ -7,8 +7,9 @@ namespace nte {
 	void handleError(Error e, bool gle){
 		if (gle){
 			GLenum ErrorCheckValue = glGetError();
-			if (ErrorCheckValue != GL_NO_ERROR) {
+			while (ErrorCheckValue != GL_NO_ERROR) {
 				std::cout << "GL Error " << static_cast<int>(e) << ": " << gluErrorString(ErrorCheckValue) << std::endl;
+				ErrorCheckValue = glGetError();
 			}
 		}
 		else {

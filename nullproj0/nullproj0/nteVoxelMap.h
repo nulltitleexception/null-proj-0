@@ -1,6 +1,7 @@
 #ifndef NTEVOXELMAP_H
 #define NTEVOXELMAP_H
 
+#include "nteModel.h"
 #include <GL/glew.h>
 
 namespace nte {
@@ -10,8 +11,7 @@ namespace nte {
 	};
 	class VoxelMap {
 	private:
-		GLuint VAO, VBO, IBO;//vertex array, vertex buffer, normal buffer, texture buffer, and index buffer objects
-		int drawSize;
+		Model* model;
 		Voxel* map;
 		int* heightmap;
 		int xLen, yLen, zLen;
@@ -20,12 +20,13 @@ namespace nte {
 		VoxelMap(int xl, int yl, int zl);
 		~VoxelMap();
 		void generateTerrain();
+		void generateHeightmap();
 		Voxel* getVoxel(int x, int y, int z); 
 		int getWidth();
 		int getHeight();
 		int getDepth();
-		void generateBuffers();
-		void deleteBuffers();
+		void generateModel();
+		void deleteModel();
 		void draw();
 	};
 }

@@ -3,6 +3,8 @@
 
 #include <chrono>
 
+#define KEY_NUMBER 100
+
 namespace nte {
 	enum class Keys : int {
 		Up = 0,
@@ -15,11 +17,21 @@ namespace nte {
 	};
 	class KeyHandler {
 	private:
-		int keys [100];
+		int keys[KEY_NUMBER];
+		bool isDown[KEY_NUMBER];
+		bool isDownPrev[KEY_NUMBER];
+		int getKeysAsInt(Keys);
 	public:
+		KeyHandler();
+		~KeyHandler();
 		void resetToDefault();
 		void setKey(Keys, int);
 		int getKey(Keys);
+		void swapKeys(int, int);
+		void handleKeyPress(int);
+		bool isKeyDown(Keys);
+		bool wasKeyPressed(Keys);
+		void update();
 	};
 }
 
