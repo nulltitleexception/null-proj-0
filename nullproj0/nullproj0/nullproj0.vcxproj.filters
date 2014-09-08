@@ -63,6 +63,12 @@
     <ClCompile Include="nteWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nteText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nteFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lodepng.h">
@@ -108,6 +114,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nteWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nteText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nteFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

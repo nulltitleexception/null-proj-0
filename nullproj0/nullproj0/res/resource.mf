@@ -3,11 +3,14 @@ metamanifest|meta.mf
 shaderprefix|shader/
 modelprefix|model/
 textureprefix|texture/
+fontprefix|font/
 shadermanifest|shader.mf
 modelmanifest|model.mf
 texturemanifest|texture.mf
+fontmanifest|font.mf
 shadersuffix|.glsl
 shadervertexsuffix|_vertex
 shaderfragmentsuffix|_fragment
 modelsuffix|.vnf
 texturesuffix|.png
+fontsuffix|.ft

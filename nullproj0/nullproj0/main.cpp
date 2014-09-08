@@ -76,6 +76,14 @@ int main(int argc, char** argv) {
 		nte::ResourceManager* resources = new nte::ResourceManager("manifest.mf");
 		title += " " + resources->getVersion();
 
+		//generates a font file
+		//removeme
+		/*resources->createFont("default_18");
+		int d = 0;
+		std::cin >> d; 
+		return 0;*/
+		//endremoveme 
+
 		//converts a .obj file into a .vnf file
 		//removeme
 		//resources->convertObjModel("monkey_smooth");
@@ -97,9 +105,13 @@ int main(int argc, char** argv) {
 		vox->generateHeightmap();
 		vox->generateModel();
 
+		nte::Camera UIcam;
+		UIcam.createOrthographicProjectionMatrix(1600, 900);
+
 		nte::Camera camera;
 		camera.createPerspectiveProjectionMatrix(1600, 900, 0.01f, 100000.0f, glm::radians(90.0f));
-		//camera.position.z = 100;
+		camera.rotation.x = glm::radians(-90.0f);
+		camera.position.y = 100;
 
 		bool paused = false;
 

@@ -21,6 +21,9 @@ namespace nte {
 		for (int i = 0; i < textureNames.size(); i++){
 			delete textures[textureNames.at(i)];
 		}
+		for (int i = 0; i < fontNames.size(); i++){
+			delete textures[fontNames.at(i)];
+		}
 	}
 	int ResourceManager::toInt(std::string s){
 		std::stringstream convert(s);
@@ -73,7 +76,7 @@ namespace nte {
 			}
 			file.close();
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open readme file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -97,7 +100,7 @@ namespace nte {
 			}
 			vFile.close();
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open version file";
 			handleError(Error::LOAD_FILE, true);
 		}
 		FILE *rfp = fopen((globalPrefix + metaPrefix + buildFileName).c_str(), "rb");
@@ -144,7 +147,7 @@ namespace nte {
 			loadReadme(readmeFile);
 			loadVersion(versionFile, buildFile);
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open meta manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -161,7 +164,7 @@ namespace nte {
 			}
 			file.close();
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open shader manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -178,7 +181,7 @@ namespace nte {
 			}
 			file.close();
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open model manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -195,7 +198,24 @@ namespace nte {
 			}
 			file.close();
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open texture manifest file";
+			handleError(Error::LOAD_FILE, true);
+		}
+	}
+	void ResourceManager::loadFontManifest(std::string fileName){
+		std::string line;
+		std::ifstream file(globalPrefix + fontPrefix + fileName);
+		if (file.is_open())
+		{
+			while (getline(file, line))
+			{
+				if (line.length() > 0){
+					loadFont(line);
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open font manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -204,6 +224,7 @@ namespace nte {
 		std::string shadermf;
 		std::string modelmf;
 		std::string texturemf;
+		std::string fontmf;
 		std::string line;
 		std::ifstream file(globalPrefix + fileName);
 		if (file.is_open())
@@ -218,6 +239,8 @@ namespace nte {
 					modelPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "textureprefix") == 0){
 					texturePrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "fontprefix") == 0){
+					fontPrefix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "metamanifest") == 0){
 					metamf = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "shadermanifest") == 0){
@@ -226,12 +249,16 @@ namespace nte {
 					modelmf = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "texturemanifest") == 0){
 					texturemf = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "fontmanifest") == 0){
+					fontmf = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "shadersuffix") == 0){
 					shaderSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "modelsuffix") == 0){
 					modelSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "texturesuffix") == 0){
 					textureSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
+				} else if (indexOf(line, "fontsuffix") == 0){
+					fontSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "shadervertexsuffix") == 0){
 					vertSuffix = line.substr(indexOf(line, "|") + 1, std::string::npos);
 				} else if (indexOf(line, "shaderfragmentsuffix") == 0){
@@ -243,8 +270,9 @@ namespace nte {
 			loadShaderManifest(shadermf);
 			loadModelManifest(modelmf);
 			loadTextureManifest(texturemf);
+			loadFontManifest(fontmf);
 		} else {
-			std::cout << "Unable to open manifest file";
+			std::cout << "Unable to open resource manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 	}
@@ -264,7 +292,7 @@ namespace nte {
 			}
 			file.close();
 		} else {
-			std::cout << "Unable to open resource manifest file";
+			std::cout << "Unable to open manifest file";
 			handleError(Error::LOAD_FILE, true);
 		}
 		loadResourceManifest(resourcemf);
@@ -281,6 +309,9 @@ namespace nte {
 	Texture* ResourceManager::getTexture(std::string fileName){
 		return textures[fileName];
 	}
+	Font* ResourceManager::getFont(std::string fileName){
+		return fonts[fileName];
+	}
 	void ResourceManager::removeModel(std::string fileName){
 		delete models[fileName];
 	}
@@ -289,6 +320,9 @@ namespace nte {
 	}
 	void ResourceManager::removeTexture(std::string fileName){
 		delete textures[fileName];
+	}
+	void ResourceManager::removeFont(std::string fileName){
+		delete fonts[fileName];
 	}
 	int ResourceManager::addVert(std::vector<unsigned int>& vertData, unsigned int v, unsigned int n, unsigned int uv){
 		for (int i = 0; i < vertData.size(); i += 3){
@@ -483,5 +517,136 @@ namespace nte {
 		textures[fileName] = new Texture(&image[0], width, height);
 		textureNames.push_back(fileName);
 		std::cout << "Done." << std::endl;
+	}
+	/*
+	Font file format:
+		initial 4 byte preheader which is the length in bytes of the rest of the file
+		divided into sections:
+			each section is composed of 4 bytes of the length of the rest of the section
+			this int is then followed by data of the specified length
+		first section contains general data:
+			kerning, space between lines vs characters, etc.  size of the space, tab character, etc.
+				first byte is int (used loosely, ints are usually 4 bytes, however this is interpreted into an int during startup) for space between chars horizontally
+				second byte is vertical space between lines.
+				third is space width in pixels.
+				fourth is tab width in pixels
+		next section is character order.  this is just a string of all displayable characters in an (arbitrary) order:
+			non-displayable character other than tab are displayed as spaces.  tab is displayed as the number of pixels wide as specified above
+				EDIT: also newlines are (while not "displayed") used to advance one line and do not display as a space.
+		third section is list of positions, widths and heights:
+			for each character there is a pos (x and y) in pixels within the "image" as two 4-byte ints
+			after the position is two more ints for width then height
+		final section is "image":
+			first 4 bytes (after the length/header/whatever the hell thing) are width, second 4 are height, remaining are a string of VALUES
+			VALUES: these are each one byte and represent a grayscale image/transparency map.
+				color is provided by shaders at runtime, this is simply for shape and/or (precalculated) antialiasing
+	*/
+	void ResourceManager::loadFont(std::string fileName){
+		std::cout << "Loading font file: " << fileName << " (" << (globalPrefix + modelPrefix + fileName + modelSuffix) << ")..." << std::endl;
+		FILE *fp = fopen((globalPrefix + fontPrefix + fileName + fontSuffix).c_str(), "rb");
+
+		std::cout << "\tLoading header...\t";
+		//load stuff...
+		std::cout << " done." << std::endl;
+
+		fclose(fp);
+		std::cout << "Done." << std::endl;
+
+		fonts[fileName] = new Font();
+		fontNames.push_back(fileName);
+
+		//delete stuff
+	}
+	//default character order:
+	//with spaces:
+	//		a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0 ` - = [ ] \ ; ' , . / ~ ! @ # $ % ^ & * ( ) _ + { } | : " < > ?
+	//without:
+	//		abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`-=[]\;',./~!@#$%^&*()_+{}|:"<>?
+	void ResourceManager::createFont(std::string fileName){
+		//primary font vars
+		int spaceLen = 0;
+		int tabLen = 0;
+		int kernLen = 0;
+		int vertSpace = 0;
+		std::vector<unsigned char> glyphOrder;
+		//size in number of seperate symbols horizontally
+		std::vector<int> glyphSize;
+
+		std::string line;
+		std::ifstream myfile(globalPrefix + fontPrefix + fileName + ".txt");
+		if (myfile.is_open()) {
+			getline(myfile, line);
+			spaceLen = toInt(line);
+			getline(myfile, line);
+			tabLen = toInt(line);
+			getline(myfile, line);
+			kernLen = toInt(line);
+			getline(myfile, line);
+			vertSpace = toInt(line);
+			getline(myfile, line);
+			for (int i = 0; i < line.length(); i++){
+				glyphOrder.push_back(line.at(i));
+				glyphSize.push_back(1);
+			}
+			while (getline(myfile, line)){
+				glyphSize.at(toInt(line.substr(0, indexOf(line, "|")))) = toInt(line.substr(indexOf(line, "|") + 1, std::string::npos));
+			}
+		} else {
+			std::cout << "error opening font file: " + fileName << std::endl;
+		}
+
+		std::string fullTexName = (globalPrefix + fontPrefix + fileName + ".png");
+		std::vector<unsigned char> image;
+		unsigned int width, height;
+		unsigned int error = lodepng::decode(image, width, height, &fullTexName[0]);
+		if (error) {
+			std::cout << "error: " << error << ": " << lodepng_error_text(error) << std::endl;
+		}
+
+		std::vector<unsigned char> grayscale;
+		grayscale.resize(image.size() / 4);
+		int top = height;
+		int bottom = 0;
+		int nonEmptyColumns = 0;
+		for (int i = 0; i < grayscale.size(); i++){
+			grayscale.at(i) = image.at((i * 4) + 3);
+		}
+		std::vector<bool> isColumnEmpty;
+		for (int a = 0; a < width; a++){
+			bool empty = true;
+			for (int b = 0; b < height; b++){
+				unsigned char val = grayscale.at(a + (b * width));
+				if (empty && val != 0){
+					empty = false;
+					nonEmptyColumns++;
+				}
+				if (b < top && val != 0) {
+					top = b;
+				}
+				if (b > bottom && val != 0) {
+					bottom = b;
+				}
+			}
+			isColumnEmpty.push_back(empty);
+		}
+		char* glyphMap = new char[((bottom + 1) - top) *nonEmptyColumns];
+		std::vector<float> glyphs;
+		for (int i = 0; i < width; i++){
+
+		}
+
+		/*
+		FILE *fp = fopen((globalPrefix + fontPrefix + fileName + ".txt").c_str(), "wb");
+
+		unsigned int vertslen = vertexData.size();
+		fwrite(&vertslen, sizeof(unsigned int), 1, fp);
+		fwrite(&vertexData[0], sizeof(float), vertexData.size(), fp);
+
+		unsigned int faceslen = faces.size();
+		fwrite(&faceslen, sizeof(unsigned int), 1, fp);
+		fwrite(&faces[0], sizeof(unsigned int), faces.size(), fp);
+
+		fclose(fp);
+		*/
 	}
 }

@@ -1,0 +1,6 @@
+3
+8
+15
+75
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`-=[]\;',./~!@#$%^&*()_+{}|:"<>?
+90|2

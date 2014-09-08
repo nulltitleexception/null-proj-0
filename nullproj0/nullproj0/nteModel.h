@@ -15,4 +15,4 @@ namespace nte {
 	};
 }
 
-#endif // NTEMODEL
+#endif // NTEMODEL_H
