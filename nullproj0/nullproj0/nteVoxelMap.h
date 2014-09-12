@@ -1,3 +1,5 @@
+//UNUSED
+
 #ifndef NTEVOXELMAP_H
 #define NTEVOXELMAP_H
 

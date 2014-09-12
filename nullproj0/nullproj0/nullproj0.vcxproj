@@ -100,6 +100,7 @@
     <ClCompile Include="nteTransform.cpp" />
     <ClCompile Include="nteVoxelMap.cpp" />
     <ClCompile Include="nteWindow.cpp" />
+    <ClCompile Include="nteWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lodepng.h" />
@@ -117,8 +118,10 @@
     <ClInclude Include="nteTexture.h" />
     <ClInclude Include="nteTime.h" />
     <ClInclude Include="nteTransform.h" />
+    <ClInclude Include="nteVector.h" />
     <ClInclude Include="nteVoxelMap.h" />
     <ClInclude Include="nteWindow.h" />
+    <ClInclude Include="nteWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

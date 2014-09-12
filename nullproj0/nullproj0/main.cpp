@@ -3,7 +3,6 @@
 #include "nteError.h"
 #include "nteWindow.h"
 #include "nteCamera.h"
-#include "nteVoxelMap.h"
 #include "nteGameObject.h"
 #include "nteTransform.h"
 #include "nteKeys.h"
@@ -92,26 +91,19 @@ int main(int argc, char** argv) {
 		//return 0;
 		//endremoveme 
 
-		/*nte::GameObject* go;
+		nte::GameObject* go;
 		go = new nte::GameObject();
 		go->addModelByReference(resources->getModel("cube_sharp"));
 		go->addUniqueTransform(new nte::Transform());
-		go->addTextureByReference(resources->getTexture("sphere"));*/
+		go->addTextureByReference(resources->getTexture("sphere"));
 		//go->addUniqueTexture(new nte::Texture(&noiseData[0], 500, 500));
-
-		nte::VoxelMap* vox;
-		vox = new nte::VoxelMap(300, 300, 300);
-		vox->generateTerrain();
-		vox->generateHeightmap();
-		vox->generateModel();
 
 		nte::Camera UIcam;
 		UIcam.createOrthographicProjectionMatrix(1600, 900);
 
 		nte::Camera camera;
-		camera.createPerspectiveProjectionMatrix(1600, 900, 0.01f, 100000.0f, glm::radians(90.0f));
-		camera.rotation.x = glm::radians(-90.0f);
-		camera.position.y = 100;
+		camera.createPerspectiveProjectionMatrix(1600, 900, 0.01f, 1000.0f, glm::radians(90.0f));
+		camera.position.z = 10;
 
 		bool paused = false;
 
@@ -153,10 +145,11 @@ int main(int argc, char** argv) {
 					camera.rotation.y -= event.motion.xrel / 40.0f;
 					break;
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_F2){
+					if (event.key.keysym.sym == SDLK_ESCAPE){
+						shouldExit = true;
+					}  else if (event.key.keysym.sym == SDLK_F2){
 						handleKeyChange(keys);
-					} else
-					if (event.key.keysym.sym == SDLK_F6){
+					} else if (event.key.keysym.sym == SDLK_F6){
 						static bool isWireFrame = false;
 						isWireFrame = !isWireFrame;
 						if (isWireFrame){
@@ -178,9 +171,7 @@ int main(int argc, char** argv) {
 				double delta = updateDeltaTimer.getMillis();
 				updateDeltaTimer.start();
 				double speed = 0.002;
-				int forward = 0;
-				int left = 0;
-				int angle = -1;
+				glm::vec2 moveDirection(0, 0);
 				if (keys->isKeyDown(nte::Keys::Sprint)){
 					speed *= 20;
 				}
@@ -194,40 +185,25 @@ int main(int argc, char** argv) {
 					camera.position.y += speed;
 				}
 				if (keys->isKeyDown(nte::Keys::Up)){
-					forward++;
+					moveDirection.y++;
 				}
 				if (keys->isKeyDown(nte::Keys::Down)){
-					forward--;
+					moveDirection.y--;
 				}
 				if (keys->isKeyDown(nte::Keys::Left)){
-					left++;
+					moveDirection.x++;
 				}
 				if (keys->isKeyDown(nte::Keys::Right)){
-					left--;
+					moveDirection.x--;
 				}
-				if (forward == 0 && left == 0){
-				} else if (forward == 1 && left == 0){
-					angle = 0;
-				} else if (forward == 1 && left == -1){
-					angle = 1;
-				} else if (forward == 0 && left == -1){
-					angle = 2;
-				} else if (forward == -1 && left == -1){
-					angle = 3;
-				} else if (forward == -1 && left == 0){
-					angle = 4;
-				} else if (forward == -1 && left == 1){
-					angle = 5;
-				} else if (forward == 0 && left == 1){
-					angle = 6;
-				} else if (forward == 1 && left == 1){
-					angle = 7;
+				double angle = atan(moveDirection.y / moveDirection.x);
+				if (moveDirection.x < 0){
+					angle += M_PI;
 				}
-				if (angle != -1){
-					camera.position.x += speed * delta * sin((angle * (M_PI / 4)) - glm::radians(camera.rotation.y));
-					camera.position.z -= speed * delta * cos((angle * (M_PI / 4)) - glm::radians(camera.rotation.y));
+				if ((moveDirection.x * moveDirection.x) + (moveDirection.y * moveDirection.y) > 0){
+					camera.position.x += speed * delta * cos((angle) + glm::radians(camera.rotation.y));
+					camera.position.z -= speed * delta * sin((angle) + glm::radians(camera.rotation.y));
 				}
-				//camera.position.y = vox->getHeightAt(camera.position.x, camera.position.z) + 0.02;
 				keys->update();
 			}
 			updateTime = frameTime.getMillis() - eventTime;
@@ -235,15 +211,10 @@ int main(int argc, char** argv) {
 				window.beginDraw();
 				glClearColor(0, 0, 0, 1);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				//std::string shaderToUse = "texture_test";
-				std::string shaderToUse = "voxel_map";
+				std::string shaderToUse = "texture_test";
 				resources->getShader(shaderToUse)->bind();
 				camera.bind(resources->getShader(shaderToUse));
-				//go->draw(resources->getShader(shaderToUse));
-				int modMatPos = glGetUniformLocation(resources->getShader(shaderToUse)->getID(), "modelMatrix");
-				nte::Transform* temp = new nte::Transform();
-				glUniformMatrix4fv(modMatPos, 1, GL_FALSE, &(temp->getAsMatrix()[0][0]));
-				vox->draw();
+				go->draw(resources->getShader(shaderToUse));
 				window.endDraw();
 				nte::handleError(nte::Error::GL_DRAW, true);
 			}
@@ -256,8 +227,7 @@ int main(int argc, char** argv) {
 			}
 			window.setTitle(title, true, fps, eventTime, updateTime, renderTime, frameTime.getMillis());
 		}
-		//delete go;
-		delete vox;
+		delete go;
 		delete resources;
 		delete keys;
 		window.destroy();
